@@ -1,0 +1,222 @@
+Name :- Arshdeep Kapoor
+Panther ID :- 002279384
+
+=========================================================================================================================
+=========================================================================================================================
+
+1. List all the details of the employees with salary greater than 1400 in the ascending order of
+their hiredate
+====>
+
+SQL> Select * from emp 
+where sal >1400 
+order by hiredate;
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- -------- ---------- ---------- ----------
+      7499 ALLEN      SALESMAN        7698 20-02-81       1600        300         30
+      7566 JONES      MANAGER         7839 02-04-81       2975                    20
+      7698 BLAKE      MANAGER         7839 01-05-81       2850                    30
+      7782 CLARK      MANAGER         7839 09-06-81       2450                    10
+      7844 TURNER     SALESMAN        7698 08-09-81       1500          0         30
+      7839 KING       PRESIDENT            17-11-81       5000                    10
+      7902 FORD       ANALYST         7566 03-12-81       3000                    20
+      1111 RAJ        CLERK           7788 12-03-84       1500                    40
+      7788 SCOTT      ANALYST         7566 19-04-87       3000                    20
+
+ 9 rows selected 
+
+=========================================================================================================================
+=========================================================================================================================
+
+2. Identify the total salary paid under each department. Display the department number and total
+salary in ascending order of the department number
+====>
+
+SQL> select Deptno "Dept Number", sum(sal) "Total Salary" 
+from emp 
+group by deptno 
+order by deptno;
+
+Dept Number                            Total Salary
+----------- ---------------------------------------
+         10                                    8750
+         20                                   10875
+         30                                    9400
+         40                                    1500
+
+=========================================================================================================================
+=========================================================================================================================
+
+3. Provide information on the number of employees, average salary, and salary total for
+department 30.
+====>
+
+SQL> select count(EMPNO) "Number of Employee" ,round(avg(SAL),0) "Average Salary ",sum(SAL) "Total Salary"
+from emp 
+where deptno = 30 
+group by DEPTNO;
+
+                     Number of Employee                         Average Salary                             Total Salary
+--------------------------------------- --------------------------------------- ---------------------------------------
+                                      6                                    1567                                    9400
+
+==========================================================================================================================
+==========================================================================================================================
+
+4. For each employee, please list his/her name and his/her department name, ordered by the
+name in descending order.
+====>
+
+SQL> select dept.dname "Department Name" ,emp.ENAME "Employee Name" 
+from emp join dept on dept.deptno=emp.deptno 
+order by ename desc;
+
+Department Nam Employee N
+-------------- ----------
+SALES          WARD      
+SALES          TURNER    
+RESEARCH       SMITH     
+RESEARCH       SCOTT     
+OPERATIONS     RAJ       
+ACCOUNTING     MILLER    
+SALES          MARTIN    
+ACCOUNTING     KING      
+RESEARCH       JONES     
+SALES          JAMES     
+RESEARCH       FORD      
+
+Department Nam Employee N
+-------------- ----------
+ACCOUNTING     CLARK     
+SALES          BLAKE     
+SALES          ALLEN     
+RESEARCH       ADAMS     
+
+ 15 rows selected 
+
+========================================================================================================================================================
+========================================================================================================================================================
+
+5. Provide department id, the number of employee, minimum salary, and maximum salary for
+each department, ordered by maximum salary in ascending order. Do not include any
+department that does not have any employee.
+====>
+SQL> select deptno "Department ID", count(empno) "Number of Employee", min(sal) "Minimum Salary of Department", max(sal) "Maximum Salary of Department"
+from emp 
+group by deptno having count(empno)>0 
+order by max(sal);
+
+Department ID                      Number of Employee            Minimum Salary of Department            Maximum Salary of Department
+------------- --------------------------------------- --------------------------------------- ---------------------------------------
+           40                                       1                                    1500                                    1500
+           30                                       6                                     950                                    2850
+           20                                       5                                     800                                    3000
+           10                                       3                                    1300                                    5000
+
+============================================================================================================================================================
+============================================================================================================================================================
+
+6. Provide information on the employee id, name, and manager id for employees whose name
+start with “A” or “M”, ordered by employee name in descending order.
+====>
+SQL> select empno "Employee ID" ,ename "Employee Name" , MGR "Manager ID" 
+from emp 
+where ename like 'A%' or ename like 'M%'
+Order by ename desc;
+
+Employee ID Employee N Manager ID
+----------- ---------- ----------
+       7934 MILLER           7782
+       7654 MARTIN           7698
+       7499 ALLEN            7698
+       7876 ADAMS            7788
+
+============================================================================================================================================================
+============================================================================================================================================================
+
+7. Provide information on employee id, name, and hire date of employees who has started
+working for the company since April, 1, 1982.
+====>
+
+SQL> select empno "Employee ID", ename "Name", hiredate "Hire Date of Employee"
+from emp 
+where HIREDATE > '01-04-1982';
+
+Employee ID Name       Hire Date of Employee
+----------- ---------- ---------------------
+       7876 ADAMS      23-05-87             
+       7788 SCOTT      19-04-87             
+       1111 RAJ        12-03-84             
+
+============================================================================================================================================================
+============================================================================================================================================================
+
+8. List the details of all the employees along with their manager’s name and department name
+====>
+SQL> select e.empno,e.ename,e.job,m.ename "Manager Name" ,e.hiredate,e.sal,e.comm,e.deptno, dept.dname "Department Name" 
+from EMP e left join emp m
+on e.mgr = m.empno join dept on dept.deptno = e.deptno;
+
+     EMPNO ENAME      JOB       Manager Na HIREDATE        SAL       COMM     DEPTNO Department Nam
+---------- ---------- --------- ---------- -------- ---------- ---------- ---------- --------------
+      7934 MILLER     CLERK     CLARK      23-01-82       1300                    10 ACCOUNTING    
+      7698 BLAKE      MANAGER   KING       01-05-81       2850                    30 SALES         
+      7566 JONES      MANAGER   KING       02-04-81       2975                    20 RESEARCH      
+      7782 CLARK      MANAGER   KING       09-06-81       2450                    10 ACCOUNTING    
+      7788 SCOTT      ANALYST   JONES      19-04-87       3000                    20 RESEARCH      
+      7902 FORD       ANALYST   JONES      03-12-81       3000                    20 RESEARCH      
+      7369 SMITH      CLERK     FORD       17-12-80        800                    20 RESEARCH      
+      1111 RAJ        CLERK     SCOTT      12-03-84       1500                    40 OPERATIONS    
+      7876 ADAMS      CLERK     SCOTT      23-05-87       1100                    20 RESEARCH      
+      7499 ALLEN      SALESMAN  BLAKE      20-02-81       1600        300         30 SALES         
+      7844 TURNER     SALESMAN  BLAKE      08-09-81       1500          0         30 SALES         
+
+     EMPNO ENAME      JOB       Manager Na HIREDATE        SAL       COMM     DEPTNO Department Nam
+---------- ---------- --------- ---------- -------- ---------- ---------- ---------- --------------
+      7521 WARD       SALESMAN  BLAKE      22-02-81       1250        500         30 SALES         
+      7654 MARTIN     SALESMAN  BLAKE      28-09-81       1250       1400         30 SALES         
+      7900 JAMES      CLERK     BLAKE      03-12-81        950                    30 SALES         
+      7839 KING       PRESIDENT            17-11-81       5000                    10 ACCOUNTING    
+
+ 15 rows selected 
+
+============================================================================================================================================================
+============================================================================================================================================================
+
+9. Display the employee details who earn more than their Managers
+====>
+SQL> select e.empno,e.ename,e.job,e.mgr,e.hiredate,e.sal,e.comm,e.deptno 
+from emp e join emp m on e.mgr = m.empno 
+where e.sal>m.sal;
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- -------- ---------- ---------- ----------
+      7788 SCOTT      ANALYST         7566 19-04-87       3000                    20
+      7902 FORD       ANALYST         7566 03-12-81       3000                    20
+
+============================================================================================================================================================
+============================================================================================================================================================
+
+10. Display the employees name, salary and department name who earn equal to or higher than
+the average salary earned in their respective departments
+====>
+SQL> select e.ename "Employee Name" , e.sal "Salary", d.dname "Department Name" from emp e join dept d on d.deptno = e.deptno 
+where e.sal>= (select avg(sal) from emp b where e.deptno = b.deptno)
+group by e.ename, d.dname, e.sal;
+
+Employee N     Salary Department Nam
+---------- ---------- --------------
+JONES            2975 RESEARCH      
+KING             5000 ACCOUNTING    
+SCOTT            3000 RESEARCH      
+ALLEN            1600 SALES         
+RAJ              1500 OPERATIONS    
+BLAKE            2850 SALES         
+FORD             3000 RESEARCH      
+
+ 7 rows selected 
+
+SQL> Spool off
+
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = END = = = = = = = = = = = == = = = = = = = = = = = = = = = = = = = = = = =
